@@ -1,4 +1,5 @@
 #include "sim.h"
+#include <WiFi.h>
 
 static const char* SIM_TAG = "Sim";
 

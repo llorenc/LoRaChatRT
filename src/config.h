@@ -147,6 +147,15 @@
 #warning "LORA_MODULE not defined"
 #endif
 
+// long range values
+// #define LM_CONFIG_LORASF 12U
+// #define LM_CONFIG_POWER 17
+
+// default values
+#define LM_CONFIG_LORASF 9U
+#define LM_CONFIG_POWER 2
+
+
 #ifndef LORA_SCK
 #if defined(NAYAD_V1)
 #define LORA_SCK 14

@@ -14,8 +14,11 @@ void LoRaMeshService::initLoraMesherService() {
     config.loraRst = LORA_RST;
     config.loraIrq = LORA_IRQ;
     config.loraIo1 = LORA_IO1;
-
-    ESP_LOGV(LMS_TAG, "LoraMesher config: CS: %d, RST: %d, IRQ: %d, IO1: %d", config.loraCs, config.loraRst, config.loraIrq, config.loraIo1);
+    config.sf = LM_CONFIG_LORASF ;
+    config.power = LM_CONFIG_POWER ;
+        
+    ESP_LOGV(LMS_TAG, "LoraMesher config: CS: %d, RST: %d, IRQ: %d, IO1: %d, SF: %d, power: %d",
+             config.loraCs, config.loraRst, config.loraIrq, config.loraIo1, config.sf, config.power);
 
 #ifdef LORA_MODULE_SX1276
     config.module = LoraMesher::LoraModules::SX1276_MOD;
@@ -29,7 +32,10 @@ void LoRaMeshService::initLoraMesherService() {
 #endif
 
     ESP_LOGV(LMS_TAG, "LoraMesher config: Module: %d", config.module);
-    ESP_LOGV(LMS_TAG, "LoraMesher config: LORA_SCK: %d, LORA_MISO: %d, LORA_MOSI: %d, LORA_CS: %d", LORA_SCK, LORA_MISO, LORA_MOSI, LORA_CS);
+    ESP_LOGV(LMS_TAG,
+             "LoraMesher config: LORA_SCK: %d, LORA_MISO: %d, LORA_MOSI: %d, "
+             "LORA_CS: %d, SF: %d, power: %d",
+             LORA_SCK, LORA_MISO, LORA_MOSI, LORA_CS, LM_CONFIG_LORASF, LM_CONFIG_POWER);
 
     //Initialize LoRaMesher
     radio.begin(config);
