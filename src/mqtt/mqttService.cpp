@@ -138,9 +138,13 @@ static void mqtt_event_handler(void* handler_args, esp_event_base_t base, int32_
             }
             break;
         case MQTT_EVENT_DISCONNECTED:
-            // mqtt_connected = false; // avoid disconnection
-            ESP_LOGI(MQTT_TAG, "MQTT_EVENT_DISCONNECTED");
-            break;
+          ESP_LOGI(MQTT_TAG, "MQTT_EVENT_DISCONNECTED");
+          if (!WiFiServerService::getInstance().connectWiFi()) {
+            mqtt_connected = false ;
+          } else {
+            MqttService::connect() ;
+          }            
+          break;
         case MQTT_EVENT_SUBSCRIBED:
             ESP_LOGI(MQTT_TAG, "MQTT_EVENT_SUBSCRIBED, msg_id=%d", event->msg_id);
             break;
