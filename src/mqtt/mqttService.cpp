@@ -142,7 +142,7 @@ static void mqtt_event_handler(void* handler_args, esp_event_base_t base, int32_
           if (!WiFiServerService::getInstance().connectWiFi()) {
             mqtt_connected = false ;
           } else {
-            MqttService::connect() ;
+            MqttService::getInstance().connect() ;
           }            
           break;
         case MQTT_EVENT_SUBSCRIBED:
