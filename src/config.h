@@ -95,7 +95,7 @@
 
 // MQTT_RT configuration
 #define MQTT_RT_ENABLED
-#define RT_SENDING_EVERY 30000 //ms
+#define RT_SENDING_EVERY 300000 //ms
 
 #if defined(BLUETOOTH_ENABLED)
 #undef WIFI_ENABLED
