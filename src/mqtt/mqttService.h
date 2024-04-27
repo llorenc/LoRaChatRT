@@ -57,6 +57,7 @@ public:
     void processReceivedMessageFromMQTT(String& topic, String& payload);
     void mqtt_service_subscribe(const char* topic);   
     String localName = "";
+    void mqtt_service_init(const char* client_id);
 private:
     MqttService(): MessageService(appPort::MQTTApp, String("MQTT")) {
         commandService = mqttCommandService;
@@ -72,7 +73,6 @@ private:
     MQTTQueueMessageV2* mqttMessageReceiveV2;
     bool sendMqttMessage(MQTTQueueMessageV2* message);
     void processMQTTMessage();
-    void mqtt_service_init(const char* client_id);
     void mqtt_app_start(const char* client_id);
     void mqtt_service_send(const char* topic, const char* data, int len);
 };
