@@ -139,11 +139,12 @@ static void mqtt_event_handler(void* handler_args, esp_event_base_t base, int32_
             break;
         case MQTT_EVENT_DISCONNECTED:
           ESP_LOGI(MQTT_TAG, "MQTT_EVENT_DISCONNECTED");
-          mqtt_connected = false;
-          MqttService::getInstance().mqtt_service_init(String(LoRaMeshService::getInstance().getLocalAddress()).c_str()) ;
-            // if (WiFiServerService::getInstance().connectWiFi()) {
-            //   MqttService::getInstance().connect() ;
-            // }         
+          if(WiFiServerService::getInstance().isConnected() && mqtt_connected) {
+            MqttService::getInstance().mqtt_service_init(
+                String(LoRaMeshService::getInstance().getLocalAddress()).c_str());
+          } else {
+            mqtt_connected = false;
+          }            
           break;
         case MQTT_EVENT_SUBSCRIBED:
             ESP_LOGI(MQTT_TAG, "MQTT_EVENT_SUBSCRIBED, msg_id=%d", event->msg_id);
