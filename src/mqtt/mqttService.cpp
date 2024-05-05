@@ -74,6 +74,7 @@ bool MqttService::connect() {
 }
 
 void MqttService::disconnect() {
+    ESP_LOGI(MQTT_TAG, "MQTT stop client");
     esp_mqtt_client_stop(client);
     mqtt_connected = false;
 }
@@ -142,6 +143,7 @@ static void mqtt_event_handler(void* handler_args, esp_event_base_t base, int32_
           if (WiFiServerService::getInstance().isConnected() &&
               mqtt_connected) {
             ESP_LOGI(MQTT_TAG, "MQTT reconnect");
+            esp_mqtt_client_start(client);
             ESP_ERROR_CHECK(esp_mqtt_client_reconnect(client)) ;
             // MqttService::getInstance().mqtt_service_init(
             //     String(LoRaMeshService::getInstance().getLocalAddress()).c_str());
