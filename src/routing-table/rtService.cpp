@@ -18,7 +18,7 @@ String RtService::getJSON(DataMessage *message) {
   rtMessage *bm = (rtMessage *)message;
   StaticJsonDocument<2000> doc;
   JsonObject data = doc.createNestedObject("RT") ;
-  if (bm->RTcount == RTCOUNT_RTONEMESSAGE) {
+  if ((bm->RTcount == RTCOUNT_RTONEMESSAGE) || (bm->messageSize != 17)) {
     rtOneMessage *rt = (rtOneMessage *)message ;
     rt->serialize(data);
   } else {
