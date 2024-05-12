@@ -45,21 +45,29 @@ public:
   }
 };
 
+struct routing_entry {
+  uint32_t neighbor ;
+  int8_t RxSNR ;
+  unsigned long SRTT ;
+} ;  
+
 class rtOneMessage: public DataMessageGeneric {
   // see LoRaMesher/src/entities/routingTable/RouteNode.h
 public:
   uint16_t RTcount = RTCOUNT_RTONEMESSAGE ; // for backward compatibility
   uint32_t number_of_neighbors ;
-  uint32_t neighbors[] ;
+  routing_entry rt[] ;
   void serialize(JsonObject &doc) {
     // Call the base class serialize function
     ((DataMessageGeneric *)(this))->serialize(doc);
     // Add the derived class data to the JSON object
     doc["RTcount"] = RTCOUNT_RTONEMESSAGE ;
     doc["number_of_neighbors"] = number_of_neighbors ;
-    JsonArray neighborsArray = doc.createNestedArray("neighbors");
-    for (uint32_t i = 0; i < number_of_neighbors ; i++) {
-      neighborsArray.add(neighbors[i]) ;
+    JsonArray rtArray = doc.createNestedArray("rt");
+    for (int i = 0; i < number_of_neighbors ; i++) {
+      rtArray[i]["neighbor"] = rt[i].neighbor ;
+      rtArray[i]["RxSNR"] = rt[i].RxSNR ;
+      rtArray[i]["SRTT"] = rt[i].SRTT ;
     }
   }
   void deserialize(JsonObject &doc) {
@@ -68,8 +76,10 @@ public:
     // Add the derived class data to the JSON object
     RTcount = doc["RTcount"] ;
     number_of_neighbors = doc["number_of_neighbors"] ;
-    for (uint32_t i = 0; i < number_of_neighbors ; i++) {
-      neighbors[i] = doc["neighbors"][i] ;
+    for (int i = 0; i < number_of_neighbors ; i++) {
+      rt[i].neighbor = doc["rt"][i]["neighbor"] ;
+      rt[i].RxSNR = doc["rt"][i]["RxSNR"] ;
+      rt[i].SRTT = doc["rt"][i]["SRTT"] ;
     }
   }
 };

@@ -118,7 +118,11 @@ void RtService::sendingLoopOneMessage(void *parameter) {
           do {
             RouteNode *rtn = routingTableList->getCurrent() ;
             if(rtn->networkNode.address == rtn->via) {
-              RTMessage->neighbors[i++] = rtn->networkNode.address;
+              RTMessage->rt[i++] = {
+                rtn->networkNode.address,
+                rtn->receivedSNR,
+                rtn->SRTT
+              } ;
             }
           } while (routingTableList->next());
           ESP_LOGV(RT_TAG, "sending rtOneMessage") ;

@@ -109,6 +109,8 @@
 #define SENSOR_SENDING_EVERY 60000 //ms
     //- Metadata Configuration
 #define METADATA_UPDATE_DELAY 300000 //ms
+// while developing
+// #define METADATA_UPDATE_DELAY 10000 //ms
 
 // Battery configuration
 #define BATTERY_PIN 34
