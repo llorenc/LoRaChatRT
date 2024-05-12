@@ -71,7 +71,7 @@ void RtService::createSendingTask() {
 #if defined(RT_MQTT_ONE_MESSAGE)
 
 rtOneMessage* RtService::createRTPayloadMessage(int number_of_neighbors) {
-    uint32_t messageSize = sizeof(rtOneMessage) + sizeof(uint32_t)*number_of_neighbors ;
+    uint32_t messageSize = sizeof(rtOneMessage) + sizeof(routing_entry)*number_of_neighbors ;
     rtOneMessage* RTMessage = (rtOneMessage*) pvPortMalloc(messageSize);
     RTMessage->messageSize = messageSize - sizeof(DataMessageGeneric);
     RTMessage->RTcount = RTCOUNT_RTONEMESSAGE ;
