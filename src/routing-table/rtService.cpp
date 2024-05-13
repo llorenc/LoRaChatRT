@@ -75,6 +75,7 @@ rtOneMessage* RtService::createRTPayloadMessage(int number_of_neighbors) {
     rtOneMessage* RTMessage = (rtOneMessage*) pvPortMalloc(messageSize);
     RTMessage->messageSize = messageSize - sizeof(DataMessageGeneric);
     RTMessage->RTcount = RTCOUNT_RTONEMESSAGE ;
+    RTMessage->uptime = millis() ;
     RTMessage->number_of_neighbors = number_of_neighbors ;
     RTMessage->appPortDst = appPort::MQTTApp;
     RTMessage->appPortSrc = appPort::RtApp;

@@ -55,6 +55,7 @@ class rtOneMessage: public DataMessageGeneric {
   // see LoRaMesher/src/entities/routingTable/RouteNode.h
 public:
   uint16_t RTcount = RTCOUNT_RTONEMESSAGE ; // for backward compatibility
+  unsigned long uptime ;
   uint32_t number_of_neighbors ;
   routing_entry rt[] ;
   void serialize(JsonObject &doc) {
@@ -62,6 +63,7 @@ public:
     ((DataMessageGeneric *)(this))->serialize(doc);
     // Add the derived class data to the JSON object
     doc["RTcount"] = RTCOUNT_RTONEMESSAGE ;
+    doc["uptime"] = uptime ;
     doc["number_of_neighbors"] = number_of_neighbors ;
     JsonArray rtArray = doc.createNestedArray("rt");
     for (int i = 0; i < number_of_neighbors ; i++) {
@@ -75,6 +77,7 @@ public:
     ((DataMessageGeneric *)(this))->deserialize(doc);
     // Add the derived class data to the JSON object
     RTcount = doc["RTcount"] ;
+    uptime = doc["uptime"] ;
     number_of_neighbors = doc["number_of_neighbors"] ;
     for (int i = 0; i < number_of_neighbors ; i++) {
       rt[i].neighbor = doc["rt"][i]["neighbor"] ;
