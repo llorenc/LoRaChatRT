@@ -171,6 +171,10 @@ static void mqtt_event_handler(void* handler_args, esp_event_base_t base, int32_
             if (event->error_handle->error_type == MQTT_ERROR_TYPE_TCP_TRANSPORT) {
               ESP_LOGI(MQTT_TAG, "Last errno string (%s)", strerror(event->error_handle->esp_transport_sock_errno));
             }
+            if (WiFiServerService::getInstance().isConnected() && mqtt_connected) {
+              ESP_LOGI(MQTT_TAG, "MQTT restart (rebooting)");
+              esp_restart() ;
+            }
             break;
         default:
           ESP_LOGI(MQTT_TAG, "Other event id:%d", event->event_id);
