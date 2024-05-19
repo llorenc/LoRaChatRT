@@ -79,6 +79,7 @@
 
 // WiFi credentials
 #define WIFI_SSID "loramesher"
+// #define WIFI_SSID "testing"
 #define WIFI_PASSWORD "lora1234"
 
 // MQTT configuration
@@ -93,9 +94,10 @@
 #define MQTT_MAX_QUEUE_SIZE 10
 #define MQTT_STILL_CONNECTED_INTERVAL 300000 // In milliseconds, 0 to disable
 
-// MQTT_RT configuration
-#define MQTT_RT_ENABLED
-#define RT_SENDING_EVERY 300000 //ms
+// MQTT_MON configuration
+#define MQTT_MON_ENABLED
+#define MON_SENDING_EVERY 300000 //ms
+// #define MON_SENDING_EVERY 10000 //ms (testing)
 
 #if defined(BLUETOOTH_ENABLED)
 #undef WIFI_ENABLED

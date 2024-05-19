@@ -57,21 +57,18 @@ void LoRaMeshService::loopReceivedPackets() {
         ESP_LOGV(LMS_TAG, "LoRaPacket received");
         ESP_LOGV(LMS_TAG, "Queue receiveUserData size: %d", radio.getReceivedQueueSize());
         ESP_LOGV(LMS_TAG, "Heap size receive: %d", ESP.getFreeHeap());
-
         //Get the first element inside the Received User Packets FiFo
         AppPacket<LoRaMeshMessage>* packet = radio.getNextAppPacket<LoRaMeshMessage>();
-
         //Create a DataMessage from the received packet
         DataMessage* message = createDataMessage(packet);
-
-        //Process the packet
-        MessageManager::getInstance().processReceivedMessage(LoRaMeshPort, message);
-
-        //Delete the message
-        vPortFree(message);
-
         //Delete the packet when used. It is very important to call this function to release the memory of the packet.
         radio.deletePacket(packet);
+        if(message) {
+          //Process the packet
+          MessageManager::getInstance().processReceivedMessage(LoRaMeshPort, message);
+          //Delete the message
+          vPortFree(message);
+        }
         ESP_LOGV(LMS_TAG, "Heap size receive2: %d", ESP.getFreeHeap());
     }
 }
@@ -124,9 +121,8 @@ LoRaMeshMessage* LoRaMeshService::createLoRaMeshMessage(DataMessage* message) {
 }
 
 DataMessage* LoRaMeshService::createDataMessage(AppPacket<LoRaMeshMessage>* appPacket) {
-    uint32_t dataMessageSize = appPacket->payloadSize + sizeof(DataMessage) - sizeof(LoRaMeshMessage);
-    uint32_t messageSize = dataMessageSize - sizeof(DataMessage);
-
+    uint32_t messageSize = appPacket->payloadSize - sizeof(LoRaMeshMessage) ;
+    uint32_t dataMessageSize = sizeof(DataMessage) + messageSize ;
     DataMessage* dataMessage = (DataMessage*) pvPortMalloc(dataMessageSize);
 
     if (dataMessage) {
@@ -140,10 +136,9 @@ DataMessage* LoRaMeshService::createDataMessage(AppPacket<LoRaMeshMessage>* appP
         dataMessage->addrDst = appPacket->dst;
 
         dataMessage->messageSize = messageSize;
-
+        ESP_LOGV(LMS_TAG, "LoRaMeshService::createDataMessage %d bytes", messageSize);
         memcpy(dataMessage->message, message->dataMessage, messageSize);
     }
-
     return dataMessage;
 }
 
@@ -172,8 +167,9 @@ String LoRaMeshService::getRoutingTable() {
 
     //Release routing table list usage.
     routingTableList->releaseInUse();
-
-    routingTableList->Clear();
+    
+    // routingTableList->Clear();
+    delete routingTableList ;
 
     return routingTable;
 }

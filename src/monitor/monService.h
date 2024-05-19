@@ -3,37 +3,36 @@
 #include "config.h"
 #include "message/messageManager.h"
 #include "message/messageService.h"
-#include "rtCommandService.h"
-#include "rtServiceMessage.h"
+#include "monCommandService.h"
+#include "monServiceMessage.h"
 #include <Arduino.h>
 #include <cstdint>
 
-#define RT_MQTT_ONE_MESSAGE
+#define MON_MQTT_ONE_MESSAGE
 
-class RtService : public MessageService {
+class MonService : public MessageService {
 public:
   /**
    * @brief Construct a new GPSService object
    *
    */
-  static RtService &getInstance() {
-    static RtService instance;
+  static MonService &getInstance() {
+    static MonService instance;
     return instance;
   }
   void init();
-  rtCommandService *rtCommandService_ = new rtCommandService();
-  String getJSON(DataMessage *message);
+  monCommandService *monCommandService_ = new monCommandService();
+  void getJSON(DataMessage *message, String &json) ;
   DataMessage *getDataMessage(JsonObject data);
   void processReceivedMessage(messagePort port, DataMessage *message);
-
 private:
-  RtService() : MessageService(RtApp, "Rt") {
-    commandService = rtCommandService_;
+  MonService() : MessageService(MonApp, "Mon") {
+    commandService = monCommandService_;
   };
   void createSendingTask();
-#if defined(RT_MQTT_ONE_MESSAGE)
+#if defined(MON_MQTT_ONE_MESSAGE)
   static void sendingLoopOneMessage(void *);
-  rtOneMessage *createRTPayloadMessage(int number_of_neighbors) ;
+  monOneMessage *createMONPayloadMessage(int number_of_neighbors) ;
 #else
   static void sendingLoop(void *);
   void createAndSendMessage(uint16_t mcount, RouteNode *);
@@ -41,5 +40,5 @@ private:
   TaskHandle_t sending_TaskHandle = NULL;
   bool running = false;
   bool isCreated = false;
-  size_t rtMessageId = 0;
+  size_t monMessageId = 0;
 };

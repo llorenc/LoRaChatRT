@@ -45,7 +45,7 @@ public:
 
     String executeCommand(String command);
 
-    String getJSON(DataMessage* message);
+    void getJSON(DataMessage* message, String&);
 
     DataMessage* getDataMessage(String json);
 

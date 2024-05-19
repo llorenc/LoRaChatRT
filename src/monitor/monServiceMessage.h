@@ -3,10 +3,10 @@
 #include <Arduino.h>
 #include "message/dataMessage.h"
 
-#define RTCOUNT_RTONEMESSAGE UINT16_MAX
+#define MONCOUNT_MONONEMESSAGE UINT16_MAX
 
 #pragma pack(1)
-class rtMessage: public DataMessageGeneric {
+class monMessage: public DataMessageGeneric {
   // see LoRaMesher/src/entities/routingTable/RouteNode.h
 public:
   uint16_t RTcount = 0;
@@ -51,25 +51,29 @@ struct routing_entry {
   unsigned long SRTT ;
 } ;  
 
-class rtOneMessage: public DataMessageGeneric {
+class monOneMessage: public DataMessageGeneric {
   // see LoRaMesher/src/entities/routingTable/RouteNode.h
 public:
-  uint16_t RTcount = RTCOUNT_RTONEMESSAGE ; // for backward compatibility
+  uint16_t RTcount = MONCOUNT_MONONEMESSAGE ; // for backward compatibility
   unsigned long uptime ;
   uint32_t number_of_neighbors ;
-  routing_entry rt[] ;
+  routing_entry mon[] ;
+  void operator delete(void *ptr) {
+    ESP_LOGI("monOneMessage", "delete");
+    vPortFree(ptr);
+  };
   void serialize(JsonObject &doc) {
     // Call the base class serialize function
     ((DataMessageGeneric *)(this))->serialize(doc);
     // Add the derived class data to the JSON object
-    doc["RTcount"] = RTCOUNT_RTONEMESSAGE ;
+    doc["RTcount"] = MONCOUNT_MONONEMESSAGE ;
     doc["uptime"] = uptime ;
     doc["number_of_neighbors"] = number_of_neighbors ;
-    JsonArray rtArray = doc.createNestedArray("rt");
+    JsonArray monArray = doc.createNestedArray("mon");
     for (int i = 0; i < number_of_neighbors ; i++) {
-      rtArray[i]["neighbor"] = rt[i].neighbor ;
-      rtArray[i]["RxSNR"] = rt[i].RxSNR ;
-      rtArray[i]["SRTT"] = rt[i].SRTT ;
+      monArray[i]["neighbor"] = mon[i].neighbor ;
+      monArray[i]["RxSNR"] = mon[i].RxSNR ;
+      monArray[i]["SRTT"] = mon[i].SRTT ;
     }
   }
   void deserialize(JsonObject &doc) {
@@ -80,9 +84,9 @@ public:
     uptime = doc["uptime"] ;
     number_of_neighbors = doc["number_of_neighbors"] ;
     for (int i = 0; i < number_of_neighbors ; i++) {
-      rt[i].neighbor = doc["rt"][i]["neighbor"] ;
-      rt[i].RxSNR = doc["rt"][i]["RxSNR"] ;
-      rt[i].SRTT = doc["rt"][i]["SRTT"] ;
+      mon[i].neighbor = doc["mon"][i]["neighbor"] ;
+      mon[i].RxSNR = doc["mon"][i]["RxSNR"] ;
+      mon[i].SRTT = doc["mon"][i]["SRTT"] ;
     }
   }
 };

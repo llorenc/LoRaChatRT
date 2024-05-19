@@ -17,9 +17,8 @@ public:
     virtual void processReceivedMessage(messagePort port, DataMessage* message) {
         ESP_LOGE(MS_TAG, "processReceivedMessage not implemented for service %s", serviceName.c_str());
     };
-    virtual String getJSON(DataMessage* message) {
+    virtual void getJSON(DataMessage* message, String &json) {
         ESP_LOGE(MS_TAG, "getJSON not implemented for service %s", serviceName.c_str());
-        return "";
     };
     TaskHandle_t receiveMessage_TaskHandle = NULL;
     xQueueHandle xQueueReceived;

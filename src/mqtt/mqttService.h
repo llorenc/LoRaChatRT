@@ -35,6 +35,11 @@
 // TODO: Check for wake from sleep mode.
 // TODO: Check for max characters in a message to avoid buffer overflow.
 
+struct MQTTQueueMessageV2 {
+  String topic;
+  String body;
+} ;
+
 class MqttService: public MessageService {
 public:
     /**
@@ -65,12 +70,8 @@ private:
     void createMqttTask();
     static void MqttLoop(void*);
     TaskHandle_t mqtt_TaskHandle = NULL;
-    struct MQTTQueueMessageV2 {
-        String topic;
-        String body;
-    };
     QueueHandle_t receiveQueue;
-    MQTTQueueMessageV2* mqttMessageReceiveV2;
+    MQTTQueueMessageV2 mqttMessageReceiveV2;
     bool sendMqttMessage(MQTTQueueMessageV2* message);
     void processMQTTMessage();
     void mqtt_app_start(const char* client_id);

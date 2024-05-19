@@ -50,12 +50,12 @@ void initMQTT() {
 #endif
 #pragma endregion
 
-#pragma region MQTT_RT
-#ifdef MQTT_RT_ENABLED
-#include "routing-table/rtService.h"
-RtService& rt_mqttService = RtService::getInstance();
-void init_mqtt_rt() {
-    rt_mqttService.init();
+#pragma region MQTT_MON
+#ifdef MQTT_MON_ENABLED
+#include "monitor/monService.h"
+MonService& mon_mqttService = MonService::getInstance();
+void init_mqtt_mon() {
+    mon_mqttService.init();
 }
 #endif
 #pragma endregion
@@ -401,9 +401,9 @@ void initManager() {
     manager.addMessageService(&mqttService);
     ESP_LOGV(TAG, "MQTT service added to manager");
 #endif
-#ifdef MQTT_RT_ENABLED
-    manager.addMessageService(&rt_mqttService);
-    ESP_LOGV(TAG, "RT-MQTT service added to manager");
+#ifdef MQTT_MON_ENABLED
+    manager.addMessageService(&mon_mqttService);
+    ESP_LOGV(TAG, "MON-MQTT service added to manager");
 #endif
 #ifdef LED_ENABLED
     manager.addMessageService(&led);
@@ -485,10 +485,10 @@ void setup() {
     initMQTT();
     ESP_LOGV(TAG, "Heap after initMQTT: %d", ESP.getFreeHeap());
 #endif
-#ifdef MQTT_RT_ENABLED
-    // Initialize MQTT_RT
-    init_mqtt_rt();
-    ESP_LOGV(TAG, "Heap after init_mqtt_rt: %d", ESP.getFreeHeap());
+#ifdef MQTT_MON_ENABLED
+    // Initialize MQTT_MON
+    init_mqtt_mon();
+    ESP_LOGV(TAG, "Heap after init_mqtt_mon: %d", ESP.getFreeHeap());
 #endif
     // Initialize AXP192
     // initAXP();

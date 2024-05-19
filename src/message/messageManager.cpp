@@ -71,18 +71,16 @@ String MessageManager::executeCommand(String command) {
     return result;
 }
 
-String MessageManager::getJSON(DataMessage* message) {
+void MessageManager::getJSON(DataMessage* message, String &json) {
     printDataMessageHeader("JSON", message);
 
     for (auto service : services) {
         if (service->serviceId == message->appPortSrc) {
-            return service->getJSON(message);
+            return service->getJSON(message, json);
         }
     }
-
     ESP_LOGE(MANAGER_TAG, "Service Not Found");
-
-    return "{\"Empty\":\"true\"}";
+    json = "{\"Empty\":\"true\"}";
 }
 
 DataMessage* MessageManager::getDataMessage(String json) {

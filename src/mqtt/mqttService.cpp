@@ -39,9 +39,8 @@ void MqttService::MqttLoop(void*) {
 void MqttService::processMQTTMessage() {
     if (xQueueReceive(receiveQueue, &mqttMessageReceiveV2, portMAX_DELAY) == pdTRUE) {
         ESP_LOGV(MQTT_TAG, "Message received from mqtt queue");
-        ESP_LOGV(MQTT_TAG, "Topic: %s", mqttMessageReceiveV2->topic.c_str());
-        processReceivedMessageFromMQTT(mqttMessageReceiveV2->topic, mqttMessageReceiveV2->body);
-        delete mqttMessageReceiveV2;
+        ESP_LOGV(MQTT_TAG, "Topic: %s", mqttMessageReceiveV2.topic.c_str());
+        processReceivedMessageFromMQTT(mqttMessageReceiveV2.topic, mqttMessageReceiveV2.body);
     }
 }
 
@@ -88,9 +87,8 @@ bool MqttService::writeToMqtt(DataMessage* message) {
         ESP_LOGW(MQTT_TAG, "No Mqtt device connected");
         return false;
     }
-    String json = MessageManager::getInstance().getJSON(message);
     MQTTQueueMessageV2* mqttMessageSend = new MQTTQueueMessageV2();
-    mqttMessageSend->body = json;
+    MessageManager::getInstance().getJSON(message, mqttMessageSend->body);
     mqttMessageSend->topic = String(MQTT_TOPIC_OUT) + String(message->addrSrc);
     sendMqttMessage(mqttMessageSend);
     delete mqttMessageSend;
@@ -160,7 +158,7 @@ static void mqtt_event_handler(void* handler_args, esp_event_base_t base, int32_
             ESP_LOGI(MQTT_TAG, "MQTT_EVENT_UNSUBSCRIBED, msg_id=%d", event->msg_id);
             break;
         case MQTT_EVENT_PUBLISHED:
-            ESP_LOGI(MQTT_TAG, "MQTT_EVENT_PUBLISHED, msg_id=%d, topic=%s", event->msg_id);
+            ESP_LOGI(MQTT_TAG, "MQTT_EVENT_PUBLISHED, msg_id=%d", event->msg_id);
             break;
         case MQTT_EVENT_DATA:
             {
@@ -210,14 +208,11 @@ void MqttService::mqtt_service_send(const char* topic, const char* data, int len
 }
 
 void MqttService::process_message(const char* topic, const char* payload) {
-    String topicStr = String(topic);
-    String payloadStr = String(payload);
-    MQTTQueueMessageV2* mqttMessageReceive = new MQTTQueueMessageV2();
-    mqttMessageReceive->topic = topicStr;
-    mqttMessageReceive->body = payloadStr;
+    // MQTTQueueMessageV2* mqttMessageReceive = new MQTTQueueMessageV2();
+    MQTTQueueMessageV2 mqttMessageReceive ;
+    mqttMessageReceive.topic = String(topic) ;
+    mqttMessageReceive.body = String(payload) ;
     if (xQueueSend(receiveQueue, &mqttMessageReceive, portMAX_DELAY) != pdPASS) {
-        // ESP_LOGE(MQTT_TAG, "Error sending to queue");
-        delete mqttMessageReceive;
-        return;
+        ESP_LOGE(MQTT_TAG, "Error sending to queue");
     }
 }
