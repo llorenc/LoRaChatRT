@@ -137,19 +137,18 @@ static void mqtt_event_handler(void* handler_args, esp_event_base_t base, int32_
             }
             break;
         case MQTT_EVENT_DISCONNECTED:
-          ESP_LOGI(MQTT_TAG, "MQTT_EVENT_DISCONNECTED");
-          if (WiFiServerService::getInstance().isConnected() &&
-              mqtt_connected) {
-            ESP_LOGI(MQTT_TAG, "MQTT restart (rebooting)");
-            esp_restart() ;
+          ESP_LOGI(MQTT_TAG, "MQTT_EVENT_DISCONNECTED") ;
+          // if (WiFiServerService::getInstance().isConnected() && mqtt_connected) {
+          // ESP_LOGI(MQTT_TAG, "MQTT restart (rebooting)");
+          //  esp_restart() ;
             // ESP_ERROR_CHECK(esp_mqtt_client_stop(client)) ;
             // ESP_ERROR_CHECK(esp_mqtt_client_start(client)) ;
             // ESP_ERROR_CHECK(esp_mqtt_client_reconnect(client)) ;
             // MqttService::getInstance().mqtt_service_init(
             //     String(LoRaMeshService::getInstance().getLocalAddress()).c_str());
-          } else {
-            mqtt_connected = false;
-          }            
+          // } else {
+          //   mqtt_connected = false;
+          // }            
           break;
         case MQTT_EVENT_SUBSCRIBED:
             ESP_LOGI(MQTT_TAG, "MQTT_EVENT_SUBSCRIBED, msg_id=%d", event->msg_id);
@@ -182,14 +181,16 @@ static void mqtt_event_handler(void* handler_args, esp_event_base_t base, int32_
 void MqttService::mqtt_app_start(const char* client_id) {
     String uri = "mqtt://" + String(MQTT_SERVER) + ":" + String(MQTT_PORT);
     ESP_LOGI(MQTT_TAG, "MQTT URI: %s", uri.c_str());
-    esp_mqtt_client_config_t mqtt_cfg = {0};  // initialize all fields to zero
-    mqtt_cfg.uri = uri.c_str();
-    mqtt_cfg.client_id = client_id;
-    mqtt_cfg.buffer_size = 2048;
+    // esp_mqtt_client_config_t mqtt_cfg = {0};  // initialize all fields to zero
+    const esp_mqtt_client_config_t mqtt_cfg = {
+      .uri = uri.c_str(),
+      .client_id = client_id,
+      .buffer_size = 2048} ;
     client = esp_mqtt_client_init(&mqtt_cfg);
     /* The last argument may be used to pass data to the event handler, in this example mqtt_event_handler */
-    esp_mqtt_client_register_event(client, esp_mqtt_event_id_t::MQTT_EVENT_ANY, mqtt_event_handler, NULL);
-    ESP_ERROR_CHECK(esp_mqtt_client_start(client));
+    // esp_mqtt_client_register_event(client, esp_mqtt_event_id_t::MQTT_EVENT_ANY, mqtt_event_handler, NULL);
+    esp_mqtt_client_register_event(client, esp_mqtt_event_id_t::MQTT_EVENT_ANY, mqtt_event_handler, client) ;
+    ESP_ERROR_CHECK(esp_mqtt_client_start(client)) ;
 }
 
 void MqttService::mqtt_service_init(const char* client_id) {

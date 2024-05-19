@@ -125,7 +125,7 @@ void MonService::sendingLoopOneMessage(void *parameter) {
           do {
             RouteNode *rtn = routingTableList->getCurrent() ;
             if(rtn->networkNode.address == rtn->via) {
-              MONMessage->mon[i++] = {
+              MONMessage->rt[i++] = {
                 rtn->networkNode.address,
                 rtn->receivedSNR,
                 rtn->SRTT

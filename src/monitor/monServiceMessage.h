@@ -57,7 +57,7 @@ public:
   uint16_t RTcount = MONCOUNT_MONONEMESSAGE ; // for backward compatibility
   unsigned long uptime ;
   uint32_t number_of_neighbors ;
-  routing_entry mon[] ;
+  routing_entry rt[] ;
   void operator delete(void *ptr) {
     ESP_LOGI("monOneMessage", "delete");
     vPortFree(ptr);
@@ -69,11 +69,11 @@ public:
     doc["RTcount"] = MONCOUNT_MONONEMESSAGE ;
     doc["uptime"] = uptime ;
     doc["number_of_neighbors"] = number_of_neighbors ;
-    JsonArray monArray = doc.createNestedArray("mon");
+    JsonArray rtArray = doc.createNestedArray("rt");
     for (int i = 0; i < number_of_neighbors ; i++) {
-      monArray[i]["neighbor"] = mon[i].neighbor ;
-      monArray[i]["RxSNR"] = mon[i].RxSNR ;
-      monArray[i]["SRTT"] = mon[i].SRTT ;
+      rtArray[i]["neighbor"] = rt[i].neighbor ;
+      rtArray[i]["RxSNR"] = rt[i].RxSNR ;
+      rtArray[i]["SRTT"] = rt[i].SRTT ;
     }
   }
   void deserialize(JsonObject &doc) {
@@ -84,9 +84,9 @@ public:
     uptime = doc["uptime"] ;
     number_of_neighbors = doc["number_of_neighbors"] ;
     for (int i = 0; i < number_of_neighbors ; i++) {
-      mon[i].neighbor = doc["mon"][i]["neighbor"] ;
-      mon[i].RxSNR = doc["mon"][i]["RxSNR"] ;
-      mon[i].SRTT = doc["mon"][i]["SRTT"] ;
+      rt[i].neighbor = doc["rt"][i]["neighbor"] ;
+      rt[i].RxSNR = doc["rt"][i]["RxSNR"] ;
+      rt[i].SRTT = doc["rt"][i]["SRTT"] ;
     }
   }
 };
