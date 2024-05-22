@@ -56,6 +56,8 @@ class monOneMessage: public DataMessageGeneric {
 public:
   uint16_t RTcount = MONCOUNT_MONONEMESSAGE ; // for backward compatibility
   unsigned long uptime ;
+  uint16_t TxQ ;
+  uint16_t RxQ ;
   uint32_t number_of_neighbors ;
   routing_entry rt[] ;
   void operator delete(void *ptr) {
@@ -68,6 +70,8 @@ public:
     // Add the derived class data to the JSON object
     doc["RTcount"] = MONCOUNT_MONONEMESSAGE ;
     doc["uptime"] = uptime ;
+    doc["TxQ"] = TxQ ;
+    doc["RxQ"] = RxQ ;
     doc["number_of_neighbors"] = number_of_neighbors ;
     JsonArray rtArray = doc.createNestedArray("rt");
     for (int i = 0; i < number_of_neighbors ; i++) {
@@ -82,6 +86,8 @@ public:
     // Add the derived class data to the JSON object
     RTcount = doc["RTcount"] ;
     uptime = doc["uptime"] ;
+    TxQ = doc["TxQ"] ;
+    RxQ  = doc["RxQ"] ;
     number_of_neighbors = doc["number_of_neighbors"] ;
     for (int i = 0; i < number_of_neighbors ; i++) {
       rt[i].neighbor = doc["rt"][i]["neighbor"] ;

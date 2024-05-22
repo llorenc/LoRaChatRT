@@ -82,6 +82,8 @@ monOneMessage* MonService::createMONPayloadMessage(int number_of_neighbors) {
     MONMessage->messageSize = messageSize - sizeof(DataMessageGeneric);
     MONMessage->RTcount = MONCOUNT_MONONEMESSAGE ;
     MONMessage->uptime = millis() ;
+    MONMessage->TxQ = LoraMesher::getInstance().getSendQueueSize() ;
+    MONMessage->RxQ = LoraMesher::getInstance().getReceivedQueueSize() ;
     MONMessage->number_of_neighbors = number_of_neighbors ;
     MONMessage->appPortDst = appPort::MQTTApp;
     MONMessage->appPortSrc = appPort::MonApp;
