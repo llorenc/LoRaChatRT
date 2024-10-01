@@ -29,6 +29,7 @@ public:
     doc["sentSNR"] = sentSNR;
     doc["SRTT"] = SRTT;
     doc["RTTVAR"] = RTTVAR;
+    doc["metric"] = metric;
   }
   void deserialize(JsonObject &doc) {
     // Call the base class deserialize function
@@ -42,6 +43,7 @@ public:
     sentSNR = doc["sentSNR"];
     SRTT = doc["SRTT"];
     RTTVAR = doc["RTTVAR"];
+    metric = doc["metric"];
   }
 };
 
@@ -49,6 +51,7 @@ struct routing_entry {
   uint32_t neighbor ;
   int8_t RxSNR ;
   unsigned long SRTT ;
+  uint8_t metric ;
 } ;  
 
 class monOneMessage: public DataMessageGeneric {
@@ -78,6 +81,7 @@ public:
       rtArray[i]["neighbor"] = rt[i].neighbor ;
       rtArray[i]["RxSNR"] = rt[i].RxSNR ;
       rtArray[i]["SRTT"] = rt[i].SRTT ;
+      rtArray[i]["metric"] = rt[i].metric ;
     }
   }
   void deserialize(JsonObject &doc) {
@@ -93,6 +97,7 @@ public:
       rt[i].neighbor = doc["rt"][i]["neighbor"] ;
       rt[i].RxSNR = doc["rt"][i]["RxSNR"] ;
       rt[i].SRTT = doc["rt"][i]["SRTT"] ;
+      rt[i].metric = doc["rt"][i]["metric"] ;
     }
   }
 };

@@ -130,7 +130,8 @@ void MonService::sendingLoopOneMessage(void *parameter) {
               MONMessage->rt[i++] = {
                 rtn->networkNode.address,
                 rtn->receivedSNR,
-                rtn->SRTT
+                rtn->SRTT,
+                rtn->networkNode.metric
               } ;
             }
           } while (routingTableList->next());
