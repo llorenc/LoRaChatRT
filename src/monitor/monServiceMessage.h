@@ -62,6 +62,7 @@ public:
   uint16_t TxQ ;
   uint16_t RxQ ;
   uint32_t number_of_neighbors ;
+  uint8_t routingTableId ;
   routing_entry rt[] ;
   void operator delete(void *ptr) {
     ESP_LOGI("monOneMessage", "delete");
