@@ -76,6 +76,7 @@ public:
     doc["TxQ"] = TxQ ;
     doc["RxQ"] = RxQ ;
     doc["number_of_neighbors"] = number_of_neighbors ;
+    doc["routingTableId"] = routingTableId ;
     JsonArray rtArray = doc.createNestedArray("rt");
     for (int i = 0; i < number_of_neighbors ; i++) {
       rtArray[i]["neighbor"] = rt[i].neighbor ;
@@ -93,6 +94,7 @@ public:
     TxQ = doc["TxQ"] ;
     RxQ  = doc["RxQ"] ;
     number_of_neighbors = doc["number_of_neighbors"] ;
+    routingTableId = doc["routingTableId"] ;
     for (int i = 0; i < number_of_neighbors ; i++) {
       rt[i].neighbor = doc["rt"][i]["neighbor"] ;
       rt[i].RxSNR = doc["rt"][i]["RxSNR"] ;

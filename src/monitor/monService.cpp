@@ -84,7 +84,8 @@ monOneMessage* MonService::createMONPayloadMessage(int number_of_neighbors) {
     MONMessage->uptime = millis() ;
     MONMessage->TxQ = LoraMesher::getInstance().getSendQueueSize() ;
     MONMessage->RxQ = LoraMesher::getInstance().getReceivedQueueSize() ;
-    MONMessage->number_of_neighbors = number_of_neighbors ;
+    MONMessage->number_of_neighbors = number_of_neighbors;
+    MONMessage->routingTableId = RoutingTableService::routingTableId ;
     MONMessage->appPortDst = appPort::MQTTApp;
     MONMessage->appPortSrc = appPort::MonApp;
     MONMessage->addrSrc = LoraMesher::getInstance().getLocalAddress() ;
