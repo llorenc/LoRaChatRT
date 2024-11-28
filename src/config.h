@@ -161,7 +161,7 @@
 
 // testbed values
 #define LM_CONFIG_LORASF 7U
-#define LM_CONFIG_POWER 10
+#define LM_CONFIG_POWER 2
 
 
 #ifndef LORA_SCK
