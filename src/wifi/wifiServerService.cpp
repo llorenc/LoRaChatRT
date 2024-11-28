@@ -201,6 +201,11 @@ bool WiFiServerService::connectWiFi() {
     ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, &wifi_config));
     ESP_ERROR_CHECK(esp_wifi_start());
     ESP_LOGI(TAG, "Connecting to WiFi...");
+    // set tx power
+    int8_t power = -4 ;
+    ESP_ERROR_CHECK(esp_wifi_set_max_tx_power(-4)) ;
+    ESP_ERROR_CHECK(esp_wifi_get_max_tx_power(&power)) ;
+    ESP_LOGV(TAG, "WiFi max_tx_power: %d", power) ;
     return true;
 }
 
